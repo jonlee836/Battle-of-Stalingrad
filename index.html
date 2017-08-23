@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Portfolio">
+    <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+    <meta name="author" content="Jon Lee">
+
+    <meta name="viewport" content="width=device-height, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/mainStyles.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Special+Elite" rel="stylesheet">    
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsi39sTkfejYHtOuj0AMCVSET6VxH_qBI"></script>
+
+    <script type="text/javascript" src="js/knockout-min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+
+    <script src="js/snazzy-info-window.min.js"></script>
+    <script src="js/info_ENG.js"></script>
+    <script src="js/info_RUS.js"></script>
+
+    <script scr="js/mapButtons.js"></script>
+    <script scr="js/overlays.js"></script>
+    <script src="js/citydata.js"></script>
+    <script src="js/main.js"></script>
+
+  </head>
+
+  <!-- This feels so wrong. -->
+  <!-- infowindow.html -> object -> array -> replace content at matching indexes -> create marker's infowindow -->
+  <body>
+
+    <div id="top-menu" >
+      <div class="container">
+	<div class="btnMenu" data-bind="click: toggleNav">
+	  &#9776;MENU
+	</div>
+
+	<div class="btnMap" data-bind="click: toggleMap">
+	  <p data-bind="text: currMap"></p>
+	</div>
+	
+      </div>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- detect outside clicks -->
+    <div data-bind="clickOutside: clickOutside.bind($data)">
+      <div id="mySidenav" class="sidenav">
+	<!-- X button (close Sidenav) -->
+
+	  <a href="javascript:void(0)" id="closeButton" class="closebtn" data-bind="click: closeNav">&times;</a>
+
+	<!--  Create array of Sidenav buttons -->
+	<div data-bind="foreach: markerType">	
+	  <button class="nav-button" data-bind="click: $parent.navbtnToggle.bind($parent, $index(), $data)">
+	    <div data-bind="style: {color: $parent.onoff[active()]}, text: name"></div>
+	  </button>
+	</div>
+	
+      </div>
+    </div>
+    <!-- The City Markers will be toggle on when the webpage loads. -->
+    
+    <!-- <button class="nav-button" data-bind="click: navbtnToggle"> </button> -->
+    <!-- <button class="nav-button" id="The City" style="color: #ffffff" onclick="toggleGroup('city')";> -->
+    <!--   The City -->
+    <!-- </button> -->
+    <!-- <button class="nav-button" id="Red Army" onclick="toggleGroup('soviet')"> -->
+    <!--   Red Army -->
+    <!-- </button> -->
+    <!-- <button class="nav-button" id="Wehrmacht" onclick="toggleGroup('wehrmacht')"> -->
+    <!--   Wehrmacht -->
+    <!-- </button> -->
+    <!-- <button class="nav-button" id="About"> -->
+    <!--   About -->
+    <!-- </button> -->
+    <!-- <button class="nav-button" id="Toggle Menu"> -->
+    <!--   Toggle Menu -->
+    <!-- </button> -->
+
+  </body>
+</html>
