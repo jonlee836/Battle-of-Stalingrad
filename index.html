@@ -19,7 +19,10 @@
     <script type="text/javascript" src="js/knockout-min.js"></script>
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 
+    <!-- 3rd party js plugin for easy customization of google-maps info windows -->
     <script src="js/snazzy-info-window.min.js"></script>
+
+    <!-- Switch to Russian -->
     <script src="js/info_ENG.js"></script>
     <script src="js/info_RUS.js"></script>
 
@@ -40,31 +43,36 @@
 	  &#9776;MENU
 	</div>
 
-	<div class="btnMap" data-bind="click: toggleMap">
-	  <p data-bind="text: currMap"></p>
+	<div class="btnMap" data-bind="click: toggleMap.bind($data)">
+	    <p data-bind="style: {color: setNameColor()}, text: currMap"></p>
+	  </div>
 	</div>
 	
-      </div>
     </div>
-
+    
+    
     <div id="map"></div>
 
     <!-- detect outside clicks -->
     <div data-bind="clickOutside: clickOutside.bind($data)">
       <div id="mySidenav" class="sidenav">
+
 	<!-- X button (close Sidenav) -->
-
-	  <a href="javascript:void(0)" id="closeButton" class="closebtn" data-bind="click: closeNav">&times;</a>
-
+	<a href="javascript:void(0)" id="closeButton" class="closebtn" data-bind="click: closeNav">&times;</a>
+	
 	<!--  Create array of Sidenav buttons -->
-	<div data-bind="foreach: markerType">	
+	<div data-bind="foreach: markerType">
+
+	  <!-- apply navbtnToggle function to each button. change state of active -->
 	  <button class="nav-button" data-bind="click: $parent.navbtnToggle.bind($parent, $index(), $data)">
-	    <div data-bind="style: {color: $parent.onoff[active()]}, text: name"></div>
+
+	    <!-- Use the value of markerType[active()] as the index for onoff[color1, color2] -->
+	    <div data-bind="style: {color: $parent.onoff[active()]}, text: name">  </div>	  
 	  </button>
 	</div>
-	
       </div>
     </div>
+
     <!-- The City Markers will be toggle on when the webpage loads. -->
     
     <!-- <button class="nav-button" data-bind="click: navbtnToggle"> </button> -->
