@@ -23,13 +23,13 @@ function toggleLanguage(type) {
 
 var mapIcons = {
     city: {
-        icon: 'images/blueicon_city.png'
+        icon: '../images/blueicon_city.png'
     },
     soviet: {
-        icon: 'images/icon_redarmy.png'
+        icon: '../images/icon_redarmy.png'
     },
     wehrmacht: {
-        icon: 'images/icon_wehrmacht.png'
+        icon: '../images/icon_wehrmacht.png'
     },
 };
 

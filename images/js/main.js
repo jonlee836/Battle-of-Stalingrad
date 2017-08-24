@@ -1,6 +1,7 @@
 var mapdata, cityOverlay;
-var navWidth = "200px";
 
+var togglebtn = false;
+var navWidth = "200px";
 var defaultPos = {
     lat: 48.75686777983242,
     lng: 44.52157974243164
@@ -19,8 +20,6 @@ var mapWindows = {
     wehrmacht: []
 }
 
-var clickCount = 1;
-
 ko.bindingHandlers.clickOutside = {
     init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
 
@@ -37,10 +36,11 @@ ko.bindingHandlers.clickOutside = {
 
 var viewModel = function() {
 
-    this.onoff = ["rgb(129,129,129)", "rgb(255,255,255)"];
     this.currMap = ko.observable("Stalingrad");
-    this.setNameColor = ko.observable("rgb(127, 0, 0)");
-        
+
+    this.onoff = ["rgb(129,129,129)", "rgb(255,255,255)"];
+    this.setNameColor = ko.observable("rgb(126, 0, 0)");
+    
     this.markerType = ko.observableArray([
 	{ name: 'City',        active: ko.observable(1), type: 'city'},
 	{ name: 'Red Army',    active: ko.observable(0), type: 'soviet'},
@@ -98,46 +98,19 @@ var viewModel = function() {
 	}
     };
 
-    // Because active is observable you can modify it with knockoutJS.
-    // Show/hide map marker layer on button click.
+    // Because active is observable you can modify it with knockoutJS
+    // show/hide map marker layer
     this.navbtnToggle = function(index, data){
 	var type = data['type'];
 
 	toggleGroup(type);            // toggle marker layer overlays.js
 	data.active(1-data.active()); // toggle button highglight
     };
-    
-    var eventDetect = [];
-    $.getScript("js/google-maps-tools.js", function(event){
-	var i = 0;
-	this.eventDetect = mapEvents.length;
 
-	mapEvents.forEach(function(obj) {
-	    var foo = { event: ko.observable(obj.event), active: ko.observable(obj.active), prev: ko.observable(obj.prev) };
-
-	    eventDetect[i] = foo;
-	    
-	    i++;
-	});
-    });
-    
-    this.eventDetect = ko.observableArray(eventDetect);
-    
-    this.displayMessage = ko.observable(0);    
-    this.toggleMonitor = function(data) {
-	
-	var a = this.displayMessage();
-	if (a != 0){
-	    this.displayMessage(1);
-	}
-
-    };
 };
 
 // waits until DOM is fully loaded before executing google maps
 $(function() {
-
-    var clickCount = 1;
     
     mapdata = new google.maps.Map(document.getElementById('map'), {
 	styles: mapStyle,	
@@ -165,11 +138,9 @@ $(function() {
     var ctrlDiv = document.createElement('div');
     ctrlDiv.index = 1;
     ctrlDiv.style['padding-top'] = '1px';
-
     $.getScript("js/mapButtons.js", function() {
     	OverlayCtrl(ctrlDiv, mapdata);
     });
-
     mapdata.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(ctrlDiv);
 
     // need region detection to determine whether or not to load it in english or russian
@@ -190,12 +161,8 @@ $(function() {
 
     // display map info on click in console
     $.getScript("js/google-maps-tools.js", function() {
-	getInfo(mapdata);	
+	getClickInfo(mapdata.getZoom());	
     });
 
-    var point = mapdata.data.map.center;
-    var lat = point.lat;
-    var lng = point.lng;
-    
     ko.applyBindings(new viewModel());
 });
