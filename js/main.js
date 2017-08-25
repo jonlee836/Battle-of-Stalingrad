@@ -161,15 +161,16 @@ $(function() {
 
     // create DOM element inside google maps
     // set buttons for WW2 map and present day satellite map
-    var ctrlDiv = document.createElement('div');
-    ctrlDiv.index = 1;
-    ctrlDiv.style['padding-top'] = '1px';
 
-    $.getScript("js/mapButtons.js", function() {
-    	OverlayCtrl(ctrlDiv, mapdata);
-    });
+    // var ctrlDiv = document.createElement('div');
+    // ctrlDiv.index = 1;
+    // ctrlDiv.style['padding-top'] = '1px';
 
-    mapdata.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(ctrlDiv);
+    // $.getScript("js/mapButtons.js", function() {
+    // 	OverlayCtrl(ctrlDiv, mapdata);
+    // });
+
+    // mapdata.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(ctrlDiv);
 
     // need region detection to determine whether or not to load it in english or russian
     // local variables makes code more readable vs accessing global variables
