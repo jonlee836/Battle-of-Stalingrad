@@ -37,7 +37,19 @@ function getInfo(mapdata){
     });
 }
 
-function getMouseMove(event) {
+function getInfo_OnMouse(mapdata){
+
+    // google.maps.event.addListener(mapdata, 'mousemove', function(event){
+    // 	getCoordinates(event);
+    // });
+    
+    google.maps.event.addListener(mapdata, 'click', function(event){
+	getCoordinates(event);
+    });
+
+}
+
+function getCoordinates(event) {
 
     var x = window.innerWidth;
     var y = window.innerHeight;
@@ -59,6 +71,7 @@ function getMouseMove(event) {
         Math.floor(worldCoordinate.y * scale / TILE_SIZE));
 
     var boundPoints = getBounds(mapdata);
+
     console.clear();
     
     console.log(x, " X ", y);
@@ -70,13 +83,14 @@ function getMouseMove(event) {
     console.log("pixelCoordinate", pixelCoordinate.x, pixelCoordinate.y);
     console.log("tileCoordinate", tileCoordinate.x, tileCoordinate.y);
 
-    console.log("Yc", boundPoints[0]);
-    console.log("bd", boundPoints[1]);
+    var ne = boundPoints[0].getNorthEast();
+    var sw = boundPoints[1].getSouthWest();
+    
+    console.log("North East", ne.lat(), ne.lng());
+    console.log("South West", sw.lat(), sw.lng());
+    
     //console.log("bounds Yc = North East", mapdata.getBounds().b);
     //console.log("bounds bd = South West", mapdata.getBounds().f);
-
-    
-    console.log("event", event);
 }
 
 function getDrag(event){
@@ -91,9 +105,12 @@ function getDrag(event){
 //    console.log("bounds", mapdata.getBounds());
 
 function getBounds(mapdata){
-    var ne = mapdata.getBounds().b;
-    var sw = mapdata.getBounds().f;
+
+    console.log(mapdata);
     
+    var ne = mapdata.getBounds();
+    var sw = mapdata.getBounds();
+
     var bounds = [ne, sw];
     
     return bounds;

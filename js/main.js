@@ -38,8 +38,8 @@ ko.bindingHandlers.clickOutside = {
 var viewModel = function() {
 
     this.onoff = ["rgb(129,129,129)", "rgb(255,255,255)"];
-    this.currMap = ko.observable("Stalingrad");
-    this.setNameColor = ko.observable("rgb(127, 0, 0)");
+    this.currMap = ko.observable("Volgagrad");
+    this.setNameColor = ko.observable("rgb(9, 31, 53)");
         
     this.markerType = ko.observableArray([
 	{ name: 'City',        active: ko.observable(1), type: 'city'},
@@ -189,12 +189,9 @@ $(function() {
 
     // display map info on click in console
     $.getScript("js/google-maps-tools.js", function() {
+	getInfo_OnMouse(mapdata);
 	//getInfo(mapdata);
     });
 
-    var point = mapdata.data.map.center;
-    var lat = point.lat;
-    var lng = point.lng;
-    
     ko.applyBindings(new viewModel());
 });

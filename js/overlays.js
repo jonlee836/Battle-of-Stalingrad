@@ -36,6 +36,8 @@ var mapIcons = {
 // create markers for the city, red army, and wehrmacht
 function setMarkers(type, info, mapdata) {
 
+    var markPos;
+    var centerPos;
     var mapIcon = mapIcons[type] || {};
     
     var imgIcon = {
@@ -76,11 +78,19 @@ function setMarkers(type, info, mapdata) {
 	    marker.setVisible(false);
 	}
 
+	$.getScript("js/google-maps-tools.js", function() {
+	    centerPos = getBounds(mapdata);
+
+	    //getInfo(mapdata);
+	});
+
 	// on mouse click center the screen around the marker.
 	google.maps.event.addListener(marker, "click", function () {
-	    var foo = this.getPosition();
-	    console.log(foo);
-            mapdata.setCenter(this.getPosition()); 
+            mapdata.setCenter(this.getPosition());
+
+	    setTimeout(function(){
+		mapdata.panBy(0, -200);		
+	    }, 10);
 	});
 	
 	// push markers and corresponding info window into arrays for future use
