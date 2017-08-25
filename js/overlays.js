@@ -50,26 +50,38 @@ function setMarkers(type, info, mapdata) {
 	var strTitle = info[currIndex][0];
 	var htmlStr = setInfo(currIndex, info);
 	
+	var markLat = info[currIndex][2];
+	var markLng = info[currIndex][3];
+	
 	var marker = new google.maps.Marker({
-	    position: new google.maps.LatLng(info[currIndex][2], info[currIndex][3]),
+	    position: new google.maps.LatLng(markLat, markLng),
 	    size: new google.maps.Size(20,20),
-	    map: mapdata,
 	    title : strTitle,
-	    icon: imgIcon
+	    icon: imgIcon,
+	    map: mapdata
 	});
-
+		
 	// call snazzy-info-window.js
 	var infowindow = new SnazzyInfoWindow({
 	    marker: marker,
 	    content: htmlStr,
 	    openOnMarkerClick: true,
+	    panOnOpen: false,
 	    closeOnMapClick: true,
 	    closeWhenOthersOpen: true
 	});
 
+	// onload have the city markers be visible.
 	if (type != 'city') {
 	    marker.setVisible(false);
 	}
+
+	// on mouse click center the screen around the marker.
+	google.maps.event.addListener(marker, "click", function () {
+	    var foo = this.getPosition();
+	    console.log(foo);
+            mapdata.setCenter(this.getPosition()); 
+	});
 	
 	// push markers and corresponding info window into arrays for future use
 	mapMarkers[type].push(marker);

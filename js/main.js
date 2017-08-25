@@ -32,7 +32,7 @@ ko.bindingHandlers.clickOutside = {
 		fn();
 	    }
 	});
-    },
+    }
 }
 
 var viewModel = function() {
@@ -108,29 +108,28 @@ var viewModel = function() {
     };
     
     var eventDetect = [];
+
+    // get array of google-map-events
     $.getScript("js/google-maps-tools.js", function(event){
 	var i = 0;
 	this.eventDetect = mapEvents.length;
 
 	mapEvents.forEach(function(obj) {
-	    var foo = { event: ko.observable(obj.event), active: ko.observable(obj.active), prev: ko.observable(obj.prev) };
-
+	    var foo = { event: ko.observable(obj.event),
+			active: ko.observable(obj.active),
+		      };
 	    eventDetect[i] = foo;
-	    
 	    i++;
 	});
     });
     
     this.eventDetect = ko.observableArray(eventDetect);
-    
     this.displayMessage = ko.observable(0);    
-    this.toggleMonitor = function(data) {
-	
-	var a = this.displayMessage();
-	if (a != 0){
-	    this.displayMessage(1);
-	}
 
+    // display google mouse events
+    this.toggleMonitor = function(data) {
+	var a = this.displayMessage();
+	this.displayMessage(1 -a );
     };
 };
 
@@ -190,7 +189,7 @@ $(function() {
 
     // display map info on click in console
     $.getScript("js/google-maps-tools.js", function() {
-	getInfo(mapdata);	
+	//getInfo(mapdata);
     });
 
     var point = mapdata.data.map.center;
