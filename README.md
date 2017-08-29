@@ -21,3 +21,5 @@ Neighborhood map of Volgagrad.
 - Javascript
   - [knockout-JS](http://knockoutjs.com/documentation/introduction.html)
   - [jquery](https://jquery.com/download/)
+- CSS
+  - [bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
