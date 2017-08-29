@@ -1,4 +1,4 @@
-// get click position info
+// // get click position info
 var TILE_SIZE = 256;
 var mapEvents = [
     { event: 'bounds_changed', active: 0 },
@@ -30,10 +30,28 @@ var mapEvents = [
 
 function getInfo(mapdata){
     mapEvents.forEach(function(obj) {
+	
 	google.maps.event.addListener(mapdata, obj.event, function(event){
+
 	    obj.active = 1 - obj.active;
-	    console.log(obj.event, obj.active);
+	    console.log(obj.event);
+//	    print_eventInfo();
+
+	    var eventCheck = setTimeout(function(){
+
+		if (obj.active == 1){
+		    obj.active = 0;
+		}
+	    }, 200);
+
 	});
+
+    });
+}
+
+function print_eventInfo(){
+    mapEvents.forEach(function(obj){
+	console.log(obj.event, obj.active);
     });
 }
 
@@ -45,6 +63,7 @@ function getInfo_OnMouse(mapdata){
     
     google.maps.event.addListener(mapdata, 'click', function(event){
 	getCoordinates(event);
+
     });
 
 }

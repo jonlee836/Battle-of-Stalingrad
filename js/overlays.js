@@ -1,6 +1,7 @@
 // Control ground overlays and marker overlays
-function toggleGroup(type) {
-    if (type != 'about' && type != 'toggle'){
+function toggleGroup(type, data) {
+
+    if (type != 'toggle' && type != 'about'){
 	for (var i = 0; i < mapMarkers[type].length; i++) {
 
 	    // I'm assuming marker is a reference here...'
@@ -12,6 +13,40 @@ function toggleGroup(type) {
 		marker.setVisible(false);
 	    }
 	    mapWindows[type][i].close();
+	}
+    }
+}
+
+// about button
+function aboutButton(data, event){
+
+    // lets me have about-modal pop up on load
+    var aboutBtn = document.getElementById("About");
+    var aboutSpan = document.getElementsByClassName("about-close")[0];
+    var aboutModal = document.getElementById("aboutId");
+
+    // open on about button click
+    aboutBtn.onclick = function(){
+	aboutModal.style.display = "block";
+    }
+
+    // close on about X button click
+    aboutSpan.onclick = function() {
+	aboutModal.style.display = "none";
+    }
+
+    // close on clicking outside the modal
+    window.onclick = function(event){
+	if (event.target == aboutModal){
+	    aboutModal.style.display = "none";
+	}
+    }
+
+    if (arguments.length == 2){
+
+	// if state of about is 0 or null
+	if(!data.active()){
+	    aboutModal.style.display = "none";
 	}
     }
 }
@@ -90,7 +125,7 @@ function setMarkers(type, info, mapdata) {
 
 	    setTimeout(function(){
 		mapdata.panBy(0, -200);		
-	    }, 10);
+	    }, 1);
 	});
 	
 	// push markers and corresponding info window into arrays for future use
