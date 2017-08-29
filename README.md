@@ -5,10 +5,10 @@ Neighborhood map of Volgagrad.
 
 ### How to use:
 
--Click on the markers to see historical information about the landmark.
--Click on the menu button in the top left to toggle on/off the other 2 marker types.
--Click on the TOGGLE MENU button in the navigation menu to prevent it from closing when you click the map.
--Click on the about button to view back info on the project.
+- Click on the markers to see historical information about the landmark.
+- Click on the menu button in the top left to toggle on/off the other 2 marker types.
+- Click on the TOGGLE MENU button in the navigation menu to prevent it from closing when you click the map.
+- Click on the about button to view back info on the project.
 
 ### Marker Types explained
 
