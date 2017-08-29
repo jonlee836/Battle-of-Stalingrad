@@ -1,19 +1,17 @@
-Welcome to my udacity neighborhood map project!
+Neighborhood map of Volgagrad.
 
-Click on the menu button in the top left to toggle on/off the other 2 marker types.
+### How to run:
+    Clone and run the website by clicking on `index.html` or visit the [live site](https://jonlee836.github.io/City-of-Volgagrad/)
 
-There are 3 marker types.
+### How to use:
 
-1.) Landmarks that are historically significant to the city as a whole.
+    -Click on the markers to see historical information about the landmark.
+    -Click on the menu button in the top left to toggle on/off the other 2 marker types.
+    -Click on the TOGGLE MENU button in the navigation menu to prevent it from closing when you click the map.
+    -Click on the about button to view back info on the project.
 
-2.) Landmarks with historical significance to the Red Army.
+### Marker Types explained
 
-3.) Landmarks with historical significance to the Wehrmacht.
-
-Click on the markers to view information about the historical site.
-
-Click on the TOGGLE MENU button in the navigation menu to prevent it from closing when you click the map.
-
-Click on the about button to view back info on the project.
-
-Live Demo : https://jonlee836.github.io/Battle-of-Stalingrad/
+    -1.) A blue drop indicates a major landmark to the city as a whole.
+    -2.) A red star is a landmark with significance to the Red Army.
+    -3.) A green cross is a landmark with significance to the Wehrmacht.
