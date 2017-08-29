@@ -33,7 +33,6 @@
 
   </head>
 
-  <!-- This feels so wrong. -->
   <!-- infowindow.html -> object -> array -> replace content at matching indexes -> create marker's infowindow -->
   <body>
     
@@ -46,6 +45,7 @@
 	<p data-bind="style: {color: setNameColor()}, text: currMap"></p>
       </div>
 
+      <!-- Get pixel coordinate information -->
       <!-- <div class="btnMap" data-bind="click: toggleMonitor"> -->
       <!-- 	Monitor -->
       <!-- </div> -->
@@ -73,7 +73,7 @@
     <!-- The About Modal -->
     <div id="aboutId" class="about-modal">
 
-      <!-- Modal content -->
+      <!-- Modal class -->
       <div class="about-content">
 
 	<!-- X close button -->
@@ -85,6 +85,7 @@
       </div>
     </div>
 
+    <!-- Side navigation menu -->
     <!-- detect outside clicks -->
     <div data-bind="clickOutside: clickOutside.bind($data)">
       <div id="mySidenav" class="sidenav">
