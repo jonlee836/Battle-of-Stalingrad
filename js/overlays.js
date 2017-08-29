@@ -84,6 +84,8 @@ function setMarkers(type, info, mapdata) {
     for (var currIndex = 0; currIndex < info.length; currIndex++) {
 	
 	var strTitle = info[currIndex][0];
+
+	// use contents of infowindow.html and set marker window
 	var htmlStr = setInfo(currIndex, info);
 	
 	var markLat = info[currIndex][2];
