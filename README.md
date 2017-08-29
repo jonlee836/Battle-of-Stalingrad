@@ -1,7 +1,7 @@
 Neighborhood map of Volgagrad.
 
 ### How to run:
--Clone and run the website by clicking on `index.html` or visit the [live site](https://jonlee836.github.io/City-of-Volgagrad/)
+- Clone and run the website by clicking on `index.html` or visit the [live site](https://jonlee836.github.io/City-of-Volgagrad/)
 
 ### How to use:
 
