@@ -314,7 +314,7 @@ var mapStyle = [
             }
         ]
     }
-]
+];
 
 // read local html file and return it as a string
 jQuery.extend({
@@ -356,13 +356,13 @@ function sanitizeHtml (strArray){
 		    currStr.charCodeAt(k) != 160) {
 		    copyStart = true;
 		}
-		if (copyStart == true) {
+		if (copyStart === true) {
 		    var endIndex = strArray[i].length;
 		    newStr = currStr.substr(k, endIndex);
 		    break;
 		}
 	    }
-	    if (copyStart == true) {
+	    if (copyStart === true) {
 		fixedArray.push(newStr);
 	    }
 	}
