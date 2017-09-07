@@ -20,14 +20,14 @@
 }
 
 .btnMenu {
-    padding-left: 40px;
+    padding-left: 15px;
     padding-right: 10px;
-    margin-right: 65px;
+    margin-right: 40px;
     display: inline-block;
     font-family: 'Special Elite', cursive;
     font-size: 30px;
     background-color: rgba(0, 0, 0, 0);
-    color:black;
+    color: black;
     text-align: center;
     text-decoration: none;
     cursor: pointer;
@@ -43,6 +43,11 @@
     text-decoration: none;
     color: rgb(14, 40, 77);
     cursor: pointer;
+}
+
+.container {
+    height: 100%;
+    position: relative;
 }
 
 #map {
@@ -75,6 +80,19 @@ body {
     font-size: 36px;
 }
 
+.searchNav {
+    height:50px;
+    width:200px;
+    color: #888888;
+}
+
+.search-seperater {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(255,255,255,1);
+}
+
 .sidenav {
     padding-top: 35px;
     height: 100%;
@@ -84,27 +102,27 @@ body {
     top: 0;
     left: 0;
     background-color: #111;
-    overflow: hidden;
+    overflow-y: hidden;
     transition: all 0.5s ease;
 }
 
-.sidenavMonitor {
-    width: 400px;
-    background-color: rgb(0, 23, 38);
-    border-color: black;
-    /* border-radius: 20px; */
-    height: auto;
-    position: absolute;
-    transition: 0.5s;
+.filterContainer {
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    background-color: rgb(17, 17, 17);
+    border-color: rgb(255, 255, 255);
 }
 
-.sidenavMonitor p {
-    padding-left: 10px;
-    padding-top: 2px;
-    color: #818181;
-    font-size: 20px;
-    position: initial;
-    transition: 2s;
+.sidenavMonitor {
+    width: -webkit-fill-available;
+    background-color: rgb(17, 17, 17);
+    border-color: rgb(255, 255, 255);
+    /* border-radius: 20px; */
+    height: auto;
+    transition: 0.5s;
+    position: absolute;
+    margin-top: -10px;
+    padding-top: 20px;
 }
 
 #pointInfo {
@@ -117,16 +135,40 @@ body {
     font-color: #ffffff;
 }
 
+#filterSearch {
+    width: 100%;
+    height: 40px;
+    margin-top: -20%;
+    padding-bottom: 55px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-family: 'Special Elite', cursive;
+    background-color: #111;
+    border: #111;
+    display: list-item;
+    transition: 0.3s;
+    outline: 0;
+}
+
+.btn-highlight-on{
+    color: #ffffff;
+}
+
+.btn-highlight-off{
+    color: #818181;
+}
+
 .nav-button {
     width: 100%;
     height: 40px;
-    margin-top: 25%;
-    margin-bottom: 40%;
+    margin-top: 5%;
+    margin-bottom: 5%;
     padding-top: 25px;
     padding-bottom: 55px;
     text-decoration: none;
     text-transform: uppercase;
-    font-size: 25px;
+    font-size: 18px;
     font-family: 'Special Elite', cursive;
     color: #818181;
     background-color: #111;
@@ -134,6 +176,38 @@ body {
     display: list-item;
     transition: 0.3s;
     outline: 0;
+}
+
+.filter-button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin: 0px auto 0px auto;
+    color: #818181;
+    border: #111;
+    background-color: #111111;
+    text-align: -webkit-center;
+    border-color: #111111;
+    font-size: 18px;
+    position: initial;
+    width: -webkit-fill-available;
+    transition: 1;
+    font-family: 'Special Elite', cursive;
+}
+.filter-button p {
+    margin: 0px 0px 0px 0px;
+}
+
+.search {
+    align-items: center;
+    font-size: 18px;
+    width: -webkit-fill-available;
+    text-align: -webkit-center;
+    border: #111111;
+    color: white;
+    background-color: #111111;
+    border-color: #111111;
 }
 
 .text-muted {

@@ -6,19 +6,6 @@ var defaultPos = {
     lng: 44.52157974243164
 };
 
-// Map mapMarkers to click on.
-var mapMarkers = {
-    city: [],
-    soviet: [],
-    wehrmacht: []
-};
-
-var mapWindows = {
-    city: [],
-    soviet: [],
-    wehrmacht: []
-}
-
 var clickCount = 1;
 
 ko.bindingHandlers.clickOutside = {
@@ -37,10 +24,30 @@ ko.bindingHandlers.clickOutside = {
 
 var viewModel = function() {
 
+    // inside scope of viewModel, regular this is the scope of binding in HTML
+    var self = this;
+
+    // Map mapMarkers to click on.
+    var mapMarkers = {
+	city: [],
+	soviet: [],
+	wehrmacht: []
+    };
+
+    var mapWindows = {
+	city: [],
+	soviet: [],
+	wehrmacht: []
+    }
+
+    var siteNames = [];
+
     this.onoff = ["rgb(129,129,129)", "rgb(255,255,255)"];
     this.currMap = ko.observable("Volgagrad");
     this.setNameColor = ko.observable("rgb(9, 31, 53)");
-        
+    this.toggleSearch = ko.observable(0);
+    this.searchOption = ko.observable("");
+    
     this.markerType = ko.observableArray([
 	{ name: 'City',        active: ko.observable(1), type: 'city'},
 	{ name: 'Red Army',    active: ko.observable(0), type: 'soviet'},
@@ -74,7 +81,10 @@ var viewModel = function() {
 	if (aboutStatus == 1) {
 	    this.markerType()[aboutIndex].active(0);
 	}
-	aboutButton(data);
+	
+	$.getScript("js/overlays.js", function(event){
+	    aboutButton(data);	    
+	});
 
 	// checking sideNav
 	var toggleIndex = this.markerType().length - 1;
@@ -117,106 +127,114 @@ var viewModel = function() {
 
 	// current clicked button
 	var type = data['type'];
-	
+
 	// toggle current status
 	data.active(1-data.active());
 
-	// check if marker or aboutButton
-	$.getScript("js/overlays.js", function(event){
-	    aboutButton(data, event);
-	    toggleGroup(type, data);      // toggle marker layer overlays.js	    
-	});
+	if (type == 'search'){
+	    var a = this.toggleSearch;
+	    this.toggleSearch(1 - a);
+	    searchButton(data, event);
+	}
+	else{
+	    // check if marker or aboutButton
+	    $.getScript("js/overlays.js", function(event){
+		aboutButton(data, event);
+		toggleGroup(type, data, mapWindows, mapMarkers);      // toggle marker layer overlays.js	    
+	    });
+	}
     };
 
-    // get array of google-map-events
+    this.initMap = function(){
+	// waits until DOM is fully loaded before executing google maps
+	// definitely a better way of doing this....
+	$.getScript("js/snazzy-info-window.min.js", function(){
 
-    // Not sure how to subscribe the event changes in mapEvents[] with eventDetect[]
-    var eventDetect = [];
-    
-    $.getScript("js/google-maps-tools.js", function(event){
-	var i = 0;
-	this.eventDetect = mapEvents.length;
+	    mapdata = new google.maps.Map(document.getElementById('map'), {
+		// use snazzy-maps mapStyle 
+		styles: mapStyle,	
+		center: defaultPos,
+		zoom: 12,
+		gestureHandling: 'gestures',
+		disableDefaultUI: true
+	    });
+	    
+	    google.maps.event.addDomListener(window, 'load');
 
-	mapEvents.forEach(function(obj) {
-	    var foo = { event: ko.observable(obj.event),
-			active: ko.observable(obj.active),
-		      };
-	    eventDetect[i] = foo;
-	    i++;
+	    var cityInfo = infoData['city'];
+	    var sovietInfo = infoData['soviet'];
+	    var wehrmachtInfo = infoData['wehrmacht'];
+
+	    // set mapMarkers and collect monument titles from each type
+	    $.getScript("js/overlays.js", function() {
+		// info window appearance
+		var infoHTML = $.getValues("js/infowindow.html");
+		// Why none of my async calls eventually loads is the reall question....
+		// var infoHTML = $.getValues("https://raw.githubusercontent.com/jonlee836/websites/master/map-knockout/js/infowindow.html");
+
+		setMarkers('city', cityInfo, mapdata, mapWindows, mapMarkers, siteNames, infoHTML);
+		setMarkers('soviet', sovietInfo, mapdata, mapWindows, mapMarkers, siteNames, infoHTML);
+		setMarkers('wehrmacht', wehrmachtInfo, mapdata, mapWindows, mapMarkers, siteNames, infoHTML);
+	    });
 	});
-    });
+    }
+
+    this.initMap();
     
-    this.eventDetect = ko.observableArray(eventDetect);
-    this.displayMessage = ko.observable(0);    
+    this.filterToggle = ko.observable(0);
 
     // toggle button for google map events
-    this.toggleMonitor = function(data) {
-	var a = this.displayMessage();
-	this.displayMessage(1 - a );
+    this.filterClick = function(data) {
+	var a = this.filterToggle();
+	this.filterToggle(1 - a );
     };
+
+    this.goToMarker = function(index, data){
+
+	jQuery.each(mapMarkers, function(i, obj){
+	    for (var currIndex = 0; currIndex < obj.length; currIndex++){
+
+		var tmpMark = obj[currIndex];
+
+		if (tmpMark.title == index.location){
+		    console.log(tmpMark);
+		    if (!tmpMark.getVisible()){
+			obj[currIndex].setVisible(true);
+		    }
+		    google.maps.event.trigger(tmpMark, 'click');
+		   		    
+		}
+	    }
+	});
+    }
+    
+    this.locationFilter = ko.computed(function(index, data){
+
+	var res = [];
+	var currSearch = this.searchOption();
+
+	for (var i = 0; i < siteNames.length; i++){
+	    
+	    var tempObj = new Object(siteNames[i]);
+	    var currStr = tempObj.location;
+	    
+	    if (currStr.toLowerCase().includes(currSearch.toLowerCase())){
+		res.push(tempObj);
+	    }
+	}
+	return res;
+    }, this);
+    
 };
 
-// waits until DOM is fully loaded before executing google maps
-$(function() {
+function searchButton(data, event){
+    console.log(data,event);
+}
 
-    var clickCount = 1;
-    
-    mapdata = new google.maps.Map(document.getElementById('map'), {
-	// use snazzy-maps mapStyle 
-	styles: mapStyle,	
-	center: defaultPos,
-	zoom: 12,
-	gestureHandling: 'gestures',
-	disableDefaultUI: true
-    });
-    
-    google.maps.event.addDomListener(window, 'load');
+function mapError(){
+    alert("Google Maps is offline");
+}
 
-    // setup overlay
-    var cityOverlay = new google.maps.OverlayView();
-
-    var imgbounds = new google.maps.LatLngBounds(
-	new google.maps.LatLng(49.005447494058096, 44.894256591796875),
-	new google.maps.LatLng(48.53843177405044, 44.33807373046875)
-    );
-    
-    cityOverlay = new google.maps.GroundOverlay('http://i.imgur.com/pyjuLfd.jpg', imgbounds);
-    cityOverlay.setMap(mapdata);
-
-    // create DOM element inside google maps
-    // set buttons for WW2 map and present day satellite map
-
-    // var ctrlDiv = document.createElement('div');
-    // ctrlDiv.index = 1;
-    // ctrlDiv.style['padding-top'] = '1px';
-
-    // $.getScript("js/mapButtons.js", function() {
-    // 	OverlayCtrl(ctrlDiv, mapdata);
-    // });
-
-    // mapdata.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(ctrlDiv);
-
-    // need region detection to determine whether or not to load it in english or russian
-    // local variables makes code more readable vs accessing global variables
-    // or.... you could just access everything global by key
-
-    // Does JS not care about an incorrect number of arguments being passed into a function??!?!?
-    var cityInfo = infoData['city'];
-    var sovietInfo = infoData['soviet'];
-    var wehrmachtInfo = infoData['wehrmacht'];
-
-    // set mapMarkers
-    $.getScript("js/overlays.js", function() {
-	setMarkers('city', cityInfo, mapdata);
-	setMarkers('soviet', sovietInfo, mapdata);
-	setMarkers('wehrmacht', wehrmachtInfo, mapdata);
-    });
-
-    // display map info on click in console
-    $.getScript("js/google-maps-tools.js", function() {
-	getInfo_OnMouse(mapdata);
-	//getInfo(mapdata);
-    });
-
+function runApp(){
     ko.applyBindings(new viewModel());
-});
+}

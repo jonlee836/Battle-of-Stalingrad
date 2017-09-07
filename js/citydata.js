@@ -319,7 +319,7 @@ var mapStyle = [
 // read local html file and return it as a string
 jQuery.extend({
     getValues: function(url) {
-        var result = null;
+        var result = "";
         $.ajax({
             url: url,
             type: 'get',
@@ -369,10 +369,3 @@ function sanitizeHtml (strArray){
     }    
     return fixedArray;
 }
-
-//$(function(e){
-//    $("#windowData").load("js/infowindow.html");
-//});
-
-//var htmltest = $("#windowData *").contents;
-//alert(htmltest.toString());

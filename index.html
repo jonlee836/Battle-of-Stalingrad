@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
   <head>
+
     <meta charset="UTF-8">
-    <meta name="description" content="Portfolio">
+    <meta name="description" content="map">
     <meta name="keywords" content="HTML,CSS,XML,JavaScript">
     <meta name="author" content="Jon Lee">
 
@@ -12,26 +13,27 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/mainStyles.css">
 
-    <link href="https://fonts.googleapis.com/css?family=Special+Elite" rel="stylesheet">    
+    <link href="https://fonts.googleapis.com/css?family=Special+Elite" rel="stylesheet">
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsi39sTkfejYHtOuj0AMCVSET6VxH_qBI"></script>
+    <!--<script type="text/javascript" src="js/knockout-min.js"></script>-->
 
-    <script type="text/javascript" src="js/knockout-min.js"></script>
-    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-
-    <!-- 3rd party js plugin for easy customization of google-maps info windows -->
-    <script src="js/snazzy-info-window.min.js"></script>
+    <!--<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsi39sTkfejYHtOuj0AMCVSET6VxH_qBI&callback=runApp" async defer onerror="mapError()"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
     <!-- Switch to Russian -->
+
+    
     <script src="js/info_ENG.js"></script>
     <script src="js/info_RUS.js"></script>
-
+        
     <script scr="js/overlays.js"></script>
     <script src="js/citydata.js"></script>
     <script src="js/main.js"></script>
-
   </head>
 
+  <!-- This feels so wrong. -->
   <!-- infowindow.html -> object -> array -> replace content at matching indexes -> create marker's infowindow -->
   <body>
     
@@ -40,92 +42,74 @@
 	&#9776;MENU
       </div>
 
-      <div class="btnMap" data-bind="click: toggleMap.bind($data)">	
-	<p data-bind="style: {color: setNameColor()}, text: currMap"></p>
-      </div>
-
-      <!-- Get pixel coordinate information -->
-      <!-- <div class="btnMap" data-bind="click: toggleMonitor"> -->
-      <!-- 	Monitor -->
-      <!-- </div> -->
-
-      <!-- <div class="row"> -->
-      <!-- 	<div class="container"> -->
-      <!-- 	  <div id="eventMap" class="sidenavMonitor" data-bind="if: displayMessage"> -->
-      <!-- 	    <div data-bind="mapEvents: detectMouseEvents.bind"> -->
-
-      <!-- 	      <div data-bind="foreach: eventDetect"> -->
-      <!-- 		<div data-bind="value: active"> -->
-      <!-- 		  <p data-bind="style: {color: $parent.onoff[active()]} , text: event"></p> -->
-      <!-- 		</div> -->
-
-      <!-- 	      </div> -->
-      <!-- 	    </div> -->
-      <!-- 	  </div> -->
-      <!-- 	</div> -->
-      <!-- </div> -->
     </div>
 
     <!-- google-maps canvas -->
     <div id="map"></div>
 
-    <!-- The About Modal -->
-    <div id="aboutId" class="about-modal">
+    <div class="container">
+      <!-- The About Modal -->
+      <div id="aboutId" class="about-modal">
 
-      <!-- Modal class -->
-      <div class="about-content">
+	<!-- Modal content -->
+	<div class="about-content">
 
-	<!-- X close button -->
-	<span class="about-close">&times;</span>
-	
-	<h1>Created by Jon Lee</h1>
-	<article>This is a google maps overlay with key landmarks from the battle of Stalingrad. If you would like to contribute historical information to this project please contact me at jonlee836@gmail.com! </article>
-	<h2>Last updated 8/28/2017</h2>
-      </div>
-    </div>
-
-    <!-- Side navigation menu -->
-    <!-- detect outside clicks -->
-    <div data-bind="clickOutside: clickOutside.bind($data)">
-      <div id="mySidenav" class="sidenav">
-
-	<!-- X button (close Sidenav) -->
-	<a href="javascript:void(0)" id="closeButton" class="closebtn" data-bind="click: closeNav">&times;</a>
-	
-	<!--  Create array of Sidenav buttons -->
-	<div data-bind="foreach: markerType">
-
-	  <!-- NOTE : Having id: name being parent means clicking -->
-	  <!-- the text or deadzone between text and button will trigger navbtnToggle-->
+	  <!-- X close button -->
+	  <span class="about-close">&times;</span>
 	  
-	  <!-- apply navbtnToggle function to each button. change state of active -->
-	  <button class="nav-button" data-bind="attr: {id: name}, click: $parent.navbtnToggle.bind($parent, $index(), $data)">
-
-	    <!-- Use the value of markerType[active()] as the index for onoff[color1, color2] -->
-	    <div data-bind="style: {color: $parent.onoff[active()]}, text: name"></div>	  
-	  </button>
+	  <h1>Created by Jon Lee</h1>
+	  <article>This is a google maps overlay with key landmarks from the battle of Stalingrad. If you would like to contribute historical information to this project please contact me at jonlee836@gmail.com! </article>
+	  <h2>Last updated 8/28/2017</h2>
 	</div>
       </div>
-    </div>
 
-    <!-- The City Markers will be toggle on when the webpage loads. -->
-    
-    <!-- <button class="nav-button" data-bind="click: navbtnToggle"> </button> -->
-    <!-- <button class="nav-button" id="The City" style="color: #ffffff" onclick="toggleGroup('city')";> -->
-    <!--   The City -->
-    <!-- </button> -->
-    <!-- <button class="nav-button" id="Red Army" onclick="toggleGroup('soviet')"> -->
-    <!--   Red Army -->
-    <!-- </button> -->
-    <!-- <button class="nav-button" id="Wehrmacht" onclick="toggleGroup('wehrmacht')"> -->
-    <!--   Wehrmacht -->
-    <!-- </button> -->
-    <!-- <button class="nav-button" id="About"> -->
-    <!--   About -->
-    <!-- </button> -->
-    <!-- <button class="nav-button" id="Toggle Menu"> -->
-    <!--   Toggle Menu -->
-    <!-- </button> -->
+      <!-- detect outside clicks -->
+      <div data-bind="clickOutside: clickOutside.bind($data)">
+
+	<div id="mySidenav" class="sidenav">
+
+	  <!-- X button (close Sidenav) -->
+	  <a href="javascript:void(0)" id="closeButton" class="closebtn" data-bind="click: closeNav">&times;</a>
+
+	  <!-- filter -->
+	  <button class="nav-button search" data-bind="click: filterClick">
+	    <p>search</p>
+	  </button>
+
+	  <div id="filterNames" class="sidenavMonitor" data-bind="if: filterToggle">
+	    <div id="filterSearch">
+	      <p>
+		<input class="search" data-bind="textInput: searchOption, valueUpdate: 'afterkeydown'" placeholder="...">
+	      </p>
+
+	      <hr class="search-seperater">
+	    </div>
+	    
+	    <div class="filterContainer">
+      	      <div data-bind="mapEvents: detectMouseEvents.bind">
+
+		<div data-bind="foreach: locationFilter">
+		  <a href="#" class="filter-button">
+      		    <p data-bind="text: location, click: $parent.goToMarker"></p>
+		  </a>
+      		</div>
+
+      	      </div>
+	    </div>
+	  </div>
+	  
+	  <!--  Create array of Sidenav buttons -->
+	  <div data-bind="foreach: markerType">
+	    <button class="nav-button" data-bind="attr: {id: name}, click: $parent.navbtnToggle.bind($parent, $index(), $data)">
+	      <!-- Use the value of markerType[active()] as the index for onoff[color1, color2] -->
+
+	      <!-- I don't understand why style is frowned upon. -->
+	      <!-- <div data-bind="style: {color: $parent.onoff[active()]}, text: name"></div> -->
+	      <div data-bind="css: active() > 0 ? 'btn-highlight-on' : 'btn-highlight-off', text: name"></div>
+	    </button>
+	  </div>
+	</div>
+      </div>
 
   </body>
 </html>

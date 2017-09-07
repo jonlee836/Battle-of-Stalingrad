@@ -1,5 +1,5 @@
 // Control ground overlays and marker overlays
-function toggleGroup(type, data) {
+function toggleGroup(type, data, mapWindows, mapMarkers) {
 
     if (type != 'toggle' && type != 'about'){
 	for (var i = 0; i < mapMarkers[type].length; i++) {
@@ -9,7 +9,9 @@ function toggleGroup(type, data) {
 
 	    if (!marker.getVisible()) {
 		marker.setVisible(true);
-	    } else {
+		marker.setAnimation(google.maps.Animation.DROP);
+	    }
+	    else {
 		marker.setVisible(false);
 	    }
 	    mapWindows[type][i].close();
@@ -52,6 +54,10 @@ function aboutButton(data, event){
     }
 }
 
+function searchButton(data, event){
+    console.log(data,event);
+}
+
 // switch between english and russian layout
 function toggleLanguage(type) {
     
@@ -70,8 +76,10 @@ var mapIcons = {
 };
 
 // create markers for the city, red army, and wehrmacht
-function setMarkers(type, info, mapdata) {
+function setMarkers(type, info, mapdata, mapWindows, mapMarkers, siteNames, infoHTML) {
 
+    var markPos;
+    var centerPos;
     var mapIcon = mapIcons[type] || {};
     
     var imgIcon = {
@@ -84,21 +92,25 @@ function setMarkers(type, info, mapdata) {
     for (var currIndex = 0; currIndex < info.length; currIndex++) {
 	
 	var strTitle = info[currIndex][0];
-
-	// use contents of infowindow.html and set marker window
-	var htmlStr = setInfo(currIndex, info);
+	var htmlStr = setInfo(currIndex, info, infoHTML);
 	
 	var markLat = info[currIndex][2];
 	var markLng = info[currIndex][3];
+
+	var locStr = new Object();
+
+	locStr.location = strTitle;
+	siteNames.push(locStr);
 	
 	var marker = new google.maps.Marker({
 	    position: new google.maps.LatLng(markLat, markLng),
 	    size: new google.maps.Size(20,20),
 	    title : strTitle,
 	    icon: imgIcon,
+	    animation: google.maps.Animation.DROP,
 	    map: mapdata
 	});
-		
+
 	// call snazzy-info-window.js
 	var infowindow = new SnazzyInfoWindow({
 	    marker: marker,
@@ -110,30 +122,29 @@ function setMarkers(type, info, mapdata) {
 	});
 
 	// onload have the city markers be visible.
-	if (type != 'city') {
-	    marker.setVisible(false);
-	}
-
 	// on mouse click center the screen around the marker.
 	google.maps.event.addListener(marker, "click", function () {
             mapdata.setCenter(this.getPosition());
 
-	    setTimeout(function(){
-		mapdata.panBy(0, -200);		
-	    }, 1);
-	});
+	    // bounce animation on click
+	    this.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout((function() {
+		this.setAnimation(null);
+            }).bind(this), 1400);
+	})
 	
+	if (type != 'city') {
+	    marker.setVisible(false);
+	}
+
 	// push markers and corresponding info window into arrays for future use
 	mapMarkers[type].push(marker);
 	mapWindows[type].push(infowindow);
     }
 }
 
-// info window appearance
-var infoHTML = $.getValues("js/infowindow.html");
-
 // read from html file
-function setInfo(currIndex, info) {
+function setInfo(currIndex, info, infoHTML) {
     var markerHtml = [];
     var strHtml = "";
 
