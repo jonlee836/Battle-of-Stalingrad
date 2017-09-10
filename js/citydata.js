@@ -314,31 +314,36 @@ var mapStyle = [
             }
         ]
     }
-];
+]
 
-// read local html file and return it as a string
-jQuery.extend({
-    getValues: function(url) {
-        var result = "";
-        $.ajax({
-            url: url,
-            type: 'get',
-            dataType: 'html',
-            async: false,
-            success: function(data) {
-                result = data;
-            }
-        });
+
+var getHTML = {
+    
+    init:function () {
+
+	var res = "";
 	
-	var strArray = result.split('\n');
-	var strRes = sanitizeHtml(strArray);
+	$.ajax({
+	    url: "js/infowindow.html",
+	    type: 'get',
+	    dataType: 'html',
+	    async: true,
+	    
+	    success: function(data) {
 
-	return strRes;
+		var result = data;
+		var strArray = result.split('\n');
+		var strRes = sanitizeHtml(strArray);
+
+		getHTML = strRes;
+	    }
+	});
     }
-});
+};
 
 // remove things that look like spaces
 function sanitizeHtml (strArray){
+
     var fixedArray = [];
     for (var i = 0; i < strArray.length; i++){
 
@@ -356,13 +361,13 @@ function sanitizeHtml (strArray){
 		    currStr.charCodeAt(k) != 160) {
 		    copyStart = true;
 		}
-		if (copyStart === true) {
+		if (copyStart == true) {
 		    var endIndex = strArray[i].length;
 		    newStr = currStr.substr(k, endIndex);
 		    break;
 		}
 	    }
-	    if (copyStart === true) {
+	    if (copyStart == true) {
 		fixedArray.push(newStr);
 	    }
 	}
