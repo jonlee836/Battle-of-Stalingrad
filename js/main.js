@@ -1,32 +1,10 @@
-var mapdata, cityOverlay;
-var navWidth = "200px";
-
-var defaultPos = {
-    lat: 48.75686777983242,
-    lng: 44.52157974243164
-};
-
-var clickCount = 1;
-
-ko.bindingHandlers.clickOutside = {
-    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-
-	var fn = ko.utils.unwrapObservable(valueAccessor());
-
-	$('html').on('click', function(e) {
-	    if (!($.contains(element, e.target) || element === e.target) &&
-		!($.contains(e.target, "closeButton"))) {
-		fn();
-	    }
-	});
-    }
-}
-
 var viewModel = function() {
 
     // self == scope of viewModel
     var self = this;
 
+    var mapdata, cityOverlay;
+    
     // Map mapMarkers to click on.
     var mapMarkers = {
 	city: [],
@@ -41,7 +19,14 @@ var viewModel = function() {
     }
 
     var siteNames = [];
-    
+
+    var navWidth = "200px";
+
+    var defaultPos = {
+	lat: 48.75686777983242,
+	lng: 44.52157974243164
+    };
+
     this.onoff = ["rgb(129,129,129)", "rgb(255,255,255)"];
     this.currMap = ko.observable("Volgagrad");
     this.setNameColor = ko.observable("rgb(9, 31, 53)");
@@ -70,7 +55,6 @@ var viewModel = function() {
 	}
     };
 
-    // outside click detection
     this.clickOutside = function(data) {
 
 	// checking aboutButton
@@ -147,19 +131,19 @@ var viewModel = function() {
 
     this.initMap = function(){
 
-	// JS scope is absurd.
+	// init marker/infowindow data
 	$.getScript("js/citydata.js", function(){
 	    getHTML.init();
 	});
 
-	$.getScript("js/snazzy-info-window.min.js", function(){
+	$.getScript("js/snazzy-info-window.js", function(){
 
 	    mapdata = new google.maps.Map(document.getElementById('map'), {
 		// use snazzy-maps mapStyle 
 		styles: mapStyle,	
 		center: defaultPos,
 		zoom: 12,
-		gestureHandling: 'gestures',
+		gestureHandling: 'greedy',
 		disableDefaultUI: true
 	    });
 	    
@@ -171,11 +155,8 @@ var viewModel = function() {
 
 	    // set mapMarkers and collect monument titles from each type
 	    $.getScript("js/overlays.js", function() {
+
 		// info window appearance
-
-		// Why none of my async calls eventually loads is the reall question....
-		// var infoHTML = $.getValues("https://raw.githubusercontent.com/jonlee836/websites/master/map-knockout/js/infowindow.html");
-
 		setMarkers('city', cityInfo, mapdata, mapWindows, mapMarkers, siteNames, getHTML);
 		setMarkers('soviet', sovietInfo, mapdata, mapWindows, mapMarkers, siteNames, getHTML);
 		setMarkers('wehrmacht', wehrmachtInfo, mapdata, mapWindows, mapMarkers, siteNames, getHTML);
@@ -230,6 +211,20 @@ var viewModel = function() {
     }, this);
     
 };
+
+ko.bindingHandlers.clickOutside = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+
+	var fn = ko.utils.unwrapObservable(valueAccessor());
+
+	$('html').on('click', function(e) {
+	    if (!($.contains(element, e.target) || element === e.target) &&
+		!($.contains(e.target, "closeButton"))) {
+		fn();
+	    }
+	});
+    }
+}
 
 function searchButton(data, event){
     console.log(data,event);
