@@ -41,20 +41,6 @@ var viewModel = function() {
 	{ name: 'Toggle Menu', active: ko.observable(0), type: 'toggle'}
     ]);
 
-    this.toggleMap = function(index, data) {
-	
-	var currCity = data.target.innerHTML;
-
-	if(currCity == "Stalingrad"){
-	    data.target.innerHTML = "Volgagrad";
-	    this.setNameColor("rgb(9, 31, 53)");
-	}
-	else{
-	    data.target.innerHTML = "Stalingrad";
-	    this.setNameColor("rgb(127, 0, 0)");
-	}
-    };
-
     this.clickOutside = function(data) {
 
 	// checking aboutButton
@@ -136,7 +122,8 @@ var viewModel = function() {
 	    getHTML.init();
 	});
 
-	$.getScript("js/snazzy-info-window.js", function(){
+	// apply snazzy info window style
+	$.getScript("js/snazzyinfowindow/snazzy-info-window.js", function(){
 
 	    mapdata = new google.maps.Map(document.getElementById('map'), {
 		// use snazzy-maps mapStyle 
@@ -147,19 +134,19 @@ var viewModel = function() {
 		disableDefaultUI: true
 	    });
 	    
-	    google.maps.event.addDomListener(window, 'load');
-
 	    var cityInfo = infoData['city'];
 	    var sovietInfo = infoData['soviet'];
 	    var wehrmachtInfo = infoData['wehrmacht'];
 
 	    // set mapMarkers and collect monument titles from each type
+
 	    $.getScript("js/overlays.js", function() {
 
 		// info window appearance
 		setMarkers('city', cityInfo, mapdata, mapWindows, mapMarkers, siteNames, getHTML);
 		setMarkers('soviet', sovietInfo, mapdata, mapWindows, mapMarkers, siteNames, getHTML);
 		setMarkers('wehrmacht', wehrmachtInfo, mapdata, mapWindows, mapMarkers, siteNames, getHTML);
+		
 	    });
 	});
     }
@@ -209,7 +196,6 @@ var viewModel = function() {
 	}
 	return res;
     }, this);
-    
 };
 
 ko.bindingHandlers.clickOutside = {
