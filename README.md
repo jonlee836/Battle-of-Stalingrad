@@ -1,8 +1,10 @@
 Neighborhood map of Volgagrad.
 
+- [live demo](https://jonlee836.github.io/City-of-Volgagrad/)
+
 ### How to run:
-- Clone and run the website by clicking on `index.html` or visit the [live site](https://jonlee836.github.io/City-of-Volgagrad/)
-- Run python -m http.server in the project directory and load website in browser.
+- Clone the website into a local folder and run python -m http.server in the project directory.
+- It will appear on localhost port 8000 by default.
 
 ### How to use:
 - Type a location in the search navigation.
