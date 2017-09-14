@@ -20,7 +20,7 @@ Neighborhood map of Volgagrad.
 
 ### Frameworks
 - [google-maps-javascript](https://developers.google.com/maps/documentation/javascript/3.exp/reference)
-  - Info window that appears on marker click [snazyy-info-window](https://github.com/atmist/snazzy-info-window/)
+  - Info window that appears on marker click [snazzy-info-window](https://github.com/atmist/snazzy-info-window/)
   - Map style [snazzymaps](https://snazzymaps.com/build-a-map)
 - Javascript
   - [knockout-JS](http://knockoutjs.com/documentation/introduction.html)
