@@ -174,33 +174,33 @@ function setInfo(currIndex, info, infoHTML) {
 	var title = info[currIndex][0];
 	var lat = info[currIndex][2];
 	var lng = info[currIndex][3];
-
-	var url = 'https://api.foursquare.com/v2/venues/search?v=20161016&ll='
-		+ lat + ',' + lng + '&intent=global&query=' + title
+	var section = "sights";
+	
+	var address = "";
+	
+	var url = 'https://api.foursquare.com/v2/venues/explore?v=20161016&ll='
+		+ lat + ',' + lng + '&section=' + section + '&intent=global&query=' + title
 		+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET;
 
-	var fourSquare = $.getJSON((url), function(data) {
-
-		var data = data.response.venues[0];
-
-		console.log(data);
-		// titleRU = data.name;
-		// category = data.categories[0].shortName;
-		address = location.formattedAddress;
-
-		// checkinsCount = data.stats.checkinsCount;
-		// usersCount = data.stats.usersCount;
-		// tipCount = data.stats.tipCount;
-		
-	}).fail(function() {
-		alert('There was an error occured with the Foursquare API. Please try again later.');
-	});
-	
-	console.log(currIndex, fourSquare.address);
-	
 	var markerHtml = [];
 	var strHtml = "";
 
+	var fourSquare = $.getJSON((url), function(data) {
+
+        address = data.response.groups[0].items[0].venue.location.formattedAddress
+		// titleRU = data.name;
+		// category = data.categories[0].shortName;
+		// checkinsCount = data.stats.checkinsCount;
+		// usersCount = data.stats.usersCount;
+		// tipCount = data.stats.tipCount;
+		console.log("inside $.getJson ", title, currIndex, address);
+
+	}).fail(function() {
+		console.log('There was an error occured with the Foursquare API. Please try again later.');
+	});
+	
+	console.log("outside $.getJson ", title, currIndex, address);
+	
 	// Apparently copy by reference is default when cloning arrays in javascript.....
 	// This creates a new copy of the array and put it into a string.
 	// Then it will return the string which is then put into the info window
@@ -215,12 +215,10 @@ function setInfo(currIndex, info, infoHTML) {
 		else if (markerHtml[i] == 'article'){
 			markerHtml[i] = info[currIndex][1];
 		}
-		else if (markerHtml[i] == 'article'){
-			markerHtml[i] = fourSquare;
+		else if (markerHtml[i] == 'time'){
+			markerHtml[i] = address;
 		}
-	
 		strHtml = strHtml + markerHtml[i];
 	}
 	return strHtml;
-	
 }
