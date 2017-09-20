@@ -31,10 +31,23 @@ var infoData = {
 		],
 		[
 			"Red October Factory",
-			"Tank production at this factory continued during the battle. T-34 tanks went from assembly line straight to the frontline in less than 2 hours.",
+			"Tank production would continue during the battle. Unpainted T-34s went straight from the assembly line to the front line; some without gunsights, others without turrets. In early October, fighting would rage inside the factory as factory workers fought off the infantry and assault guns of the 14th Panzer and 60th motorized division.",
 			48.763266,
 			44.560116
+		],
+		[
+			"Barrikady Gun Factory",
+			" ",
+			48.777007776767704,
+			44.57548141479492
+		],
+		[
+			"Dzerzhinsky Tractor Factory",
+			"Tank production would continue during the battle. Unpainted T-34s went straight from the assembly line to the front line; some without gunsights, others without turrets. In early October, fighting would rage inside the factory as factory workers fought off the infantry and assault guns of the 14th Panzer and 60th motorized division.",
+			48.80234808114538,
+			44.60551679134369
 		]
+		
 	],
 
 	wehrmacht: [
@@ -43,6 +56,12 @@ var infoData = {
 			"Overlooking Fallen Fighters square, this apartment store became refuge to the remaining officers of the 6th Army. On January 31, 1943 Field Marshall Paulus formally surrendered to the Red Army in the basement of Univermag.",
 			48.70893211397571,
 			44.51551795005798
+		],
+		[
+			"Railway Station 1",
+			"Recaptured by 1st Batt, 42nd Guards Rifle Regiment on September 15, railway station #1 would change hands over 15 times in 3 days. By the 18th of September, it was in the hands of 267th Regiment, the Wehrmacht was now less than a kilometer from the Volga river.",
+			48.71628040256448,
+			44.51977729797363
 		]
 	]
 };

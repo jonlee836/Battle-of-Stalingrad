@@ -30,28 +30,28 @@ var mapEvents = [
 
 function getInfo(mapdata){
     mapEvents.forEach(function(obj) {
-	
-	google.maps.event.addListener(mapdata, obj.event, function(event){
+		
+		google.maps.event.addListener(mapdata, obj.event, function(event){
 
-	    obj.active = 1 - obj.active;
-	    console.log(obj.event);
-//	    print_eventInfo();
+			obj.active = 1 - obj.active;
+			console.log(obj.event);
+			//	    print_eventInfo();
 
-	    var eventCheck = setTimeout(function(){
+			var eventCheck = setTimeout(function(){
 
-		if (obj.active == 1){
-		    obj.active = 0;
-		}
-	    }, 200);
+				if (obj.active == 1){
+					obj.active = 0;
+				}
+			}, 200);
 
-	});
+		});
 
     });
 }
 
 function print_eventInfo(){
     mapEvents.forEach(function(obj){
-	console.log(obj.event, obj.active);
+		console.log(obj.event, obj.active);
     });
 }
 
@@ -62,18 +62,18 @@ function getInfo_OnMouse(mapdata){
     // });
     
     google.maps.event.addListener(mapdata, 'click', function(event){
-	getCoordinates(event);
-
+		getCoordinates(event);
     });
 
 }
 
-function getCoordinates(event) {
+function getCoordinates(event, mapdata) {
 
     var x = window.innerWidth;
     var y = window.innerHeight;
 
     console.log(event);
+
     var lat = event.latLng.lat();
     var lng = event.latLng.lng();
     var zoom = mapdata.getZoom();
@@ -96,8 +96,7 @@ function getCoordinates(event) {
     console.log(x, " X ", y);
     console.log("scale", scale);
     console.log("zoom", zoom);
-    
-    console.log("default center", getDefaultCenterPoint());
+
     console.log("lat/lng", lat, lng);
     console.log("pixelCoordinate", pixelCoordinate.x, pixelCoordinate.y);
     console.log("tileCoordinate", tileCoordinate.x, tileCoordinate.y);

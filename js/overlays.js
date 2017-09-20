@@ -1,3 +1,12 @@
+function getInfo_OnMouse(mapdata){
+
+    google.maps.event.addListener(mapdata, 'click', function(event){
+
+		getCoordinates(event, mapdata);
+
+     });
+}
+
 // Control ground overlays and marker overlays
 function toggleGroup(type, data, mapWindows, mapMarkers) {
 
@@ -116,8 +125,8 @@ function setMarkers(type, info, mapdata, mapWindows, mapMarkers, siteNames, info
 		//		+ '&intent=&query=' + title + '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET;
 
 		// var url = 'https://api.foursquare.com/v2/venues/explore?v=20170916&ll='
-		// 		+ markLat + ',' + markLng + '&sortByDistance=1' + '&section=' + section + '&intent=nextVenues&query=' + title
-		// 		+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET;
+		//			+ markLat + ',' + markLng + '&sortByDistance=1' + '&section=' + section + '&intent=nextVenues&query=' + title
+		//			+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET;
 
 		var url = 'https://api.foursquare.com/v2/venues/explore?v=20170916&ll='
 			+ markLat + ',' + markLng + '&intent=browse=' + title
@@ -145,6 +154,23 @@ function setMarkers(type, info, mapdata, mapWindows, mapMarkers, siteNames, info
 			panOnOpen: false,
 			closeOnMapClick: true,
 			closeWhenOthersOpen: true,
+			callbacks: {
+				beforeOpen: function() {
+					console.log("before opening infowindow");
+				},
+				afterOpen: function() {
+					console.log("opened infowindow");
+
+					$("#lightgallery").lightGallery({
+						thumbnail:true,
+						animateThumb: false,
+						showThumbByDefault: true					
+					});
+				},
+				afterClose: function() {
+					console.log("closed infowindow");
+				}
+			}
 		});
 
 		// on mouse click center the screen around the marker.
@@ -158,17 +184,13 @@ function setMarkers(type, info, mapdata, mapWindows, mapMarkers, siteNames, info
 			setTimeout((function() {
 				this.setAnimation(null);
 			}).bind(this), 1400);
-		});
 
-		// How to attach an image slider....
-		google.maps.event.addListener(infowindow, 'domready', function(){
-			console.log("dom loaded");
 		});
 
 		// Set city to be visible on load
-		// if (type != 'city') {
-		// marker.setVisible(false);
-		// }
+		if (type != 'city') {
+			marker.setVisible(false);
+		}
 
 		marker.setVisible(true);
 
@@ -176,15 +198,90 @@ function setMarkers(type, info, mapdata, mapWindows, mapMarkers, siteNames, info
 		mapMarkers[type].push(marker);
 		mapWindows[type].push(infowindow);
 
-		console.log("length", mapWindows[type].length);
 		var mapWindows_Index = mapWindows[type].length -1;
 
-		// Async call to foursquare data, this returns the nearest topPick according to fourSquare.
+		getImages(title, htmlStr, mapWindows, type, mapWindows_Index);
 		
+		// Async call to foursquare data, this returns the nearest topPick according to fourSquare.
 		// setfourSquare(url, title, htmlStr, mapWindows, type, mapWindows_Index);
 	}
 }
-// read from html file
+
+function getImages(title, htmlStr, mapWindows, type, index){
+
+	var baseDir = 'images';
+	var thumbSize = '<MARKUP_THUMBNAIL>';
+	var fullSize = '<MARKUP_FULLIMAGE>';
+	var currHTML_placeholder = '<MARKUPimages>';
+	var maxImages = 8;
+	
+	var markupHTML =
+		"<li data-responsive=\""+ thumbSize + "\" data-src=\"" + fullSize + "\" " +
+		"data-sub-html=\"<p><MARKUP_DESCRIPTION></p>\">"+ 
+		"<a href=\"\">"+
+		"<img class=\"img-responsive\" src=\""+ thumbSize + "\">"+
+		"<div class=\"image-gallery-poster\">" +
+		"<img src=\"https://sachinchoolur.github.io/lightgallery.js/static/img/zoom.png\">" +
+		"</div>"+
+		"</a></li> ";
+
+	var url = baseDir + '/' + title + '/img.json';
+	console.log(url);
+	$.getJSON((url), function(data) {
+
+		if (data.fullsize.length != 0 && data.thumbnails.length != 0){
+			var injectHTML = "";
+
+			// each image has a corresponding thumbnail
+			for (var i = 0; i < data.fullsize.length; i++){
+
+				tmpHTML = markupHTML;
+
+				if (i >= maxImages){
+					tmpHTML = tmpHTML.replace("<li", "<li style=\"display: none;\"");
+				}
+				
+				tmpthumbnail = data.thumbnails[i];
+				tmpthumbnail.replace(" ", "%20");
+
+				tmpfullimg = data.fullsize[i];
+				tmpfullimg.replace(" ", "%20");
+
+				tmpHTML = tmpHTML.replace("<MARKUP_THUMBNAIL>", tmpthumbnail);
+				tmpHTML = tmpHTML.replace("<MARKUP_THUMBNAIL>", tmpthumbnail);
+
+				tmpHTML = tmpHTML.replace("<MARKUP_FULLIMAGE>", tmpfullimg);
+
+				tmpHTML = tmpHTML.replace("/", "%20");
+				
+				console.log("tmpthumbnail", tmpthumbnail);
+				console.log("tmpfullimg", tmpfullimg);
+				console.log("tmpHTML", tmpHTML);
+
+				injectHTML = injectHTML + tmpHTML;
+			}
+
+			htmlStr = htmlStr.replace('<MARKUPimages>', injectHTML);
+			mapWindows[type][index].setContent(htmlStr);
+		
+			// console.log("injectHTML", injectHTML);
+			// console.log("markupHTML", markupHTML);
+			// console.log(htmlStr);
+
+			// console.log(mapWindows[type][index]);
+			// mapWindows[type][index].setContent(htmlStr);
+			// mapWindows[type][index].setContent(htmlStr);
+
+			// console.log("data : ", data);
+			// console.log("full size : ", data.fullsize);
+			// console.log("thumb size : ", data.thumbnails);
+		}		
+	}).fail(function() {
+		// eModal.alert('There was an error occured with the Foursquare API. Please try again later.');
+		console.log('unable to load' + title + ' json.');
+	});
+}
+
 function setInfo(currIndex, info, infoHTML) {
 
 	var markerHtml = [];
@@ -198,17 +295,16 @@ function setInfo(currIndex, info, infoHTML) {
 	}
 
 	for (var i = 0; i < markerHtml.length; i++){
-		if (markerHtml[i] == 'MARKUPtitle'){
+		if (markerHtml[i] == '<MARKUPtitle>'){
 			markerHtml[i] = info[currIndex][0];
 		}
-		else if (markerHtml[i] == 'MARKUParticle'){
+		else if (markerHtml[i] == '<MARKUParticle>'){
 			markerHtml[i] = info[currIndex][1];
 		}
 		strHtml = strHtml + markerHtml[i];
 	}
 	return strHtml;
 }
-
 
 function setfourSquare(url, title, htmlStr, mapWindows, type, index){
 
@@ -247,3 +343,31 @@ function setfourSquare(url, title, htmlStr, mapWindows, type, index){
 		// console.log('There was an error occured with the Foursquare API. Please try again later.');
 	});
 }
+
+// $(document).ready(function(){
+	// console.log("#lightgallery is ready");
+	// $('#lightgallery').lightGallery();
+// });
+
+// There has got to be a better way...
+// window.onclick = function(event) {    
+//     // if toggleCondition is true don't hide navbar when you click outside it
+//     if (event.target.matches("button.nav-button") ||
+// 		event.target.matches("p")
+//        ){
+// 		toggleClick(event);
+//     }
+//     else if (toggle[endIndex]){
+		
+// 		// check if click is outside the nav bar
+// 		if(!event.target.matches(".button") &&
+// 		   !event.target.matches(".sidenav") &&
+// 		   !event.target.matches("p") &&
+// 		   !event.target.matches(".toggle-button-sidenav") &&
+// 		   !event.target.matches(".nav-button") &&
+// 		   document.getElementById("mySidenav").style.width === navWidth
+// 		  ){
+// 			closeNav();
+// 		}
+//     }
+// }

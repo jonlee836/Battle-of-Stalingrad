@@ -6,8 +6,6 @@ var ViewModel = function() {
 	// self == scope of viewModel
 	var self = this;
 
-	var mapdata, cityOverlay;
-
 	// Map mapMarkers to click on.
 	var mapMarkers = {
 		city: [],
@@ -135,19 +133,20 @@ var ViewModel = function() {
 		}).fail(function(){
 			eModal.alert("unable to load landmark descriptions, please try again later.")
 		});
-
+		
 		// console.log("mapstyle", mapStyle);
 		// apply snazzy info window style
 		$.getScript("js/snazzyinfowindow/snazzy-info-window.js", function(){
 
-			mapdata = new google.maps.Map(document.getElementById('map'), {
-				// use snazzy-maps mapStyle
+			var mapOptions = {
 				styles: mapStyle.responseJSON,
 				center: defaultPos,
 				zoom: 12,
 				gestureHandling: 'greedy',
 				disableDefaultUI: true
-			});
+			};
+			
+			var mapdata = new google.maps.Map(document.getElementById('map'), mapOptions);
 
 			var cityInfo = infoData['city'];
 			var sovietInfo = infoData['soviet'];
@@ -156,14 +155,18 @@ var ViewModel = function() {
 			// set mapMarkers and collect monument titles from each type
 
 			$.getScript("js/overlays.js", function() {
-
 				// info window appearance
+
 				setMarkers('city', cityInfo, mapdata, mapWindows, mapMarkers, siteNames, getHTML);
 				setMarkers('soviet', sovietInfo, mapdata, mapWindows, mapMarkers, siteNames, getHTML);
 				setMarkers('wehrmacht', wehrmachtInfo, mapdata, mapWindows, mapMarkers, siteNames, getHTML);
+
+				getInfo_OnMouse(mapdata);
+				
 			}).fail(function(){
 				eModal.alert("something went wrong, try reloading the page.");
 			});
+			
 		}).fail(function(){
 			eModal.alert("something went wrong while loading the infowindows");
 		});
@@ -172,9 +175,8 @@ var ViewModel = function() {
 	this.filterToggle = ko.observable(0);
 
 	this.searchHilite = ko.pureComputed(function() {
-        return this.filterToggle() == 1 ? "btn-highlight-on" : "btn-highlight-off";
-    }, this);
-	
+		return this.filterToggle() == 1 ? "btn-highlight-on" : "btn-highlight-off";
+	}, this);
 
 	// toggle button for google map events
 	this.filterClick = function(data) {
@@ -183,7 +185,7 @@ var ViewModel = function() {
 		// document.getElementById("searchfield").focus;
 		var a = this.filterToggle();
 		this.filterToggle(1 - a );
-		
+
 		// very hacky, i'm aware -_-
 		this.searchOption(". . . . .");
 		this.searchOption("");
